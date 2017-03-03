@@ -10,9 +10,7 @@ let cp = require('child_process');
 let path = require("path");
 
 let router = require("koa-router")();
-let md5 = require("md5");
 let log4js = require('log4js');
-let del = require('del');
 let _ = require('lodash');
 
 let logger = log4js.getLogger('app');
@@ -82,11 +80,11 @@ function processRouter(router, file, basePath, routerConfig){
 
     // 进路由和出路由时添加钩子函数, 全局钩子函数先执行，再执行路由自己的钩子函数
     let controller = function *(){
-        if(routerConfig.preProcessor) yield routerConfig.preProcessor.bind(this)();
-        if(router.preProcessor) yield router.preProcessor.bind(this)();
+        if(routerConfig.preProcessor) routerConfig.preProcessor.bind(this)();
+        if(router.preProcessor) router.preProcessor.bind(this)();
         if(router.middleware) yield router.middleware.bind(this)();
-        if(routerConfig.postProcessor)  yield routerConfig.postProcessor.bind(this)();
-        if(router.postProcessor)  yield router.postProcessor.bind(this)();
+        if(routerConfig.postProcessor)  routerConfig.postProcessor.bind(this)();
+        if(router.postProcessor)  router.postProcessor.bind(this)();
     }
 
     // 得到文件内容
